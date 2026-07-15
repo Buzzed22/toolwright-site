@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Toolwright — small, exact tools for small businesses</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy: #12233F;
+    --navy-line: #3D5A80;
+    --paper: #EDEEF0;
+    --card: #FFFFFF;
+    --ink: #142032;
+    --ink-soft: #5C6B80;
+    --amber: #F4A93A;
+    --go: #2FA88A;
+    --radius: 12px;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{
+    font-family:'Inter', sans-serif;
+    color:var(--ink);
+    background:var(--paper);
+    line-height:1.5;
+  }
+  .mono{ font-family:'Space Mono', monospace; }
+  a{ color:inherit; }
+  .container{ max-width:1040px; margin:0 auto; padding:0 24px; }
+
+  /* NAV */
+  nav{
+    position:sticky; top:0; z-index:10;
+    background:rgba(18,35,63,0.92);
+    backdrop-filter:blur(6px);
+  }
+  nav .container{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 24px;
+  }
+  .logo{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700; font-size:17px; color:white;
+  }
+  .logo .dot{ color:var(--amber); }
+  .navcta{
+    background:var(--go); color:white;
+    padding:9px 18px; border-radius:8px;
+    font-size:13px; font-weight:600;
+    text-decoration:none;
+  }
+
+  /* HERO */
+  .hero{
+    background:var(--navy);
+    color:white;
+    padding:80px 24px 100px 24px;
+    position:relative;
+    overflow:hidden;
+    background-image:
+      linear-gradient(rgba(61,90,128,0.35) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(61,90,128,0.35) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .hero .container{
+    display:grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap:50px;
+    align-items:center;
+  }
+  @media (max-width:820px){ .hero .container{ grid-template-columns:1fr; } }
+  .eyebrow{
+    font-family:'Space Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--amber);
+    margin-bottom:16px;
+  }
+  h1{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:44px;
+    line-height:1.12;
+    letter-spacing:-0.01em;
+    margin-bottom:20px;
+  }
+  h1 em{ color:var(--amber); font-style:normal; }
+  .hero p.sub{
+    font-size:16px;
+    color:#C7D1E0;
+    max-width:460px;
+    margin-bottom:28px;
+  }
+  .hero-ctas{ display:flex; gap:12px; flex-wrap:wrap; }
+  .btn-primary{
+    background:var(--go); color:white;
+    padding:13px 22px; border-radius:8px;
+    font-weight:600; font-size:14px;
+    text-decoration:none; display:inline-block;
+  }
+  .btn-ghost{
+    border:1px solid rgba(255,255,255,0.3); color:white;
+    padding:13px 22px; border-radius:8px;
+    font-weight:600; font-size:14px;
+    text-decoration:none; display:inline-block;
+  }
+
+  /* schematic diagram */
+  .schematic{
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.15);
+    border-radius:var(--radius);
+    padding:24px;
+  }
+  .schem-label{
+    font-family:'Space Mono', monospace;
+    font-size:11px; color:var(--amber);
+    letter-spacing:0.08em; text-transform:uppercase;
+    margin-bottom:16px;
+  }
+  .schem-row{
+    display:flex; align-items:center; justify-content:space-between;
+    font-family:'Space Mono', monospace;
+    font-size:12px;
+  }
+  .schem-node{
+    background:rgba(255,255,255,0.06);
+    border:1px dashed rgba(255,255,255,0.35);
+    border-radius:8px;
+    padding:10px 8px;
+    text-align:center;
+    flex:1;
+    color:#DCE3EE;
+  }
+  .schem-arrow{ color:var(--navy-line); padding:0 6px; font-size:16px; }
+  .schem-out{
+    margin-top:16px;
+    padding-top:16px;
+    border-top:1px dashed rgba(255,255,255,0.2);
+    display:flex; justify-content:space-between;
+    font-family:'Space Mono', monospace; font-size:13px;
+  }
+  .schem-out .amount{ color:var(--amber); font-weight:700; }
+
+  /* SECTIONS */
+  section{ padding:70px 24px; }
+  .section-head{ text-align:center; margin-bottom:44px; }
+  .kicker{
+    font-family:'Space Mono', monospace;
+    font-size:12px; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--ink-soft); margin-bottom:10px;
+  }
+  h2{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700; font-size:28px;
+  }
+
+  /* HOW IT WORKS */
+  .steps{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:24px;
+  }
+  @media (max-width:780px){ .steps{ grid-template-columns:1fr; } }
+  .step{
+    background:var(--card); border:1px solid #DCE1E6; border-radius:var(--radius);
+    padding:26px;
+    position:relative;
+  }
+  .step .num{
+    font-family:'Space Mono', monospace;
+    font-size:12px; color:var(--go); font-weight:700;
+    margin-bottom:12px;
+  }
+  .step h3{ font-family:'Space Grotesk', sans-serif; font-size:17px; margin-bottom:8px; }
+  .step p{ font-size:14px; color:var(--ink-soft); }
+
+  /* BUILDS */
+  .builds{ display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+  @media (max-width:780px){ .builds{ grid-template-columns:1fr; } }
+  .build-card{
+    background:var(--card); border:1px solid #DCE1E6; border-radius:var(--radius);
+    overflow:hidden;
+  }
+  .build-swatch{ height:8px; }
+  .swatch-1{ background:linear-gradient(90deg,#6B8F71,#E0972E); }
+  .swatch-2{ background:linear-gradient(90deg,#2E4A6B,#E8622C); }
+  .build-body{ padding:24px; }
+  .build-tag{
+    font-family:'Space Mono', monospace; font-size:11px;
+    color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.06em;
+    margin-bottom:8px;
+  }
+  .build-body h3{ font-family:'Space Grotesk', sans-serif; font-size:19px; margin-bottom:10px; }
+  .build-body p{ font-size:14px; color:var(--ink-soft); margin-bottom:16px; }
+  .build-feats{ list-style:none; margin-bottom:18px; }
+  .build-feats li{
+    font-size:13px; color:var(--ink); margin-bottom:6px;
+    padding-left:16px; position:relative;
+  }
+  .build-feats li::before{
+    content:"–"; position:absolute; left:0; color:var(--go);
+  }
+  .build-cta{
+    font-size:13px; font-weight:600; color:var(--go);
+    text-decoration:none;
+  }
+
+  /* PRICING */
+  .pricing{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  @media (max-width:780px){ .pricing{ grid-template-columns:1fr; } }
+  .price-card{
+    background:var(--card); border:1px solid #DCE1E6; border-radius:var(--radius);
+    padding:26px; text-align:left;
+  }
+  .price-card.featured{ border:2px solid var(--go); }
+  .price-name{ font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:16px; margin-bottom:6px; }
+  .price-amount{ font-family:'Space Mono', monospace; font-size:28px; color:var(--go); margin-bottom:14px; }
+  .price-amount span{ font-size:13px; color:var(--ink-soft); }
+  .price-card ul{ list-style:none; }
+  .price-card li{ font-size:13px; color:var(--ink-soft); margin-bottom:8px; padding-left:16px; position:relative; }
+  .price-card li::before{ content:"–"; position:absolute; left:0; color:var(--go); }
+
+  /* CONTACT */
+  .contact{ background:var(--navy); color:white; }
+  .contact .section-head h2{ color:white; }
+  .contact .section-head .kicker{ color:#9FB0C7; }
+  .contact-wrap{
+    max-width:520px; margin:0 auto;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.15);
+    border-radius:var(--radius);
+    padding:30px;
+  }
+  .form-row{ margin-bottom:16px; }
+  .form-row label{
+    display:block; font-size:12px; font-family:'Space Mono', monospace;
+    color:#9FB0C7; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em;
+  }
+  .form-row input, .form-row textarea{
+    width:100%; padding:11px 12px;
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.2);
+    border-radius:8px; color:white; font-family:'Inter',sans-serif; font-size:14px;
+  }
+  .form-row textarea{ min-height:80px; resize:vertical; }
+  .form-row input::placeholder, .form-row textarea::placeholder{ color:#6B7A90; }
+  .submit-btn{
+    width:100%; padding:13px; border:none; border-radius:8px;
+    background:var(--go); color:white; font-weight:700; font-size:14px; cursor:pointer;
+    margin-top:6px;
+  }
+
+  footer{
+    text-align:center; padding:30px 24px;
+    font-family:'Space Mono', monospace;
+    font-size:12px; color:var(--ink-soft);
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <div class="logo">Toolwright<span class="dot">.</span></div>
+    <a class="navcta" href="#contact">Get in touch</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <div>
+      <div class="eyebrow">Custom tools, built fast</div>
+      <h1>I build small, <em>exact</em> tools for small businesses.</h1>
+      <p class="sub">Not another website template. A quote calculator, a booking form, a tracker — one specific thing that works exactly how your business prices and runs, live in days.</p>
+      <div class="hero-ctas">
+        <a class="btn-primary" href="#contact">Start a project</a>
+        <a class="btn-ghost" href="#builds">See recent builds</a>
+      </div>
+    </div>
+
+    <div class="schematic">
+      <div class="schem-label">Example: quote tool logic</div>
+      <div class="schem-row">
+        <div class="schem-node">Home size</div>
+        <div class="schem-arrow">+</div>
+        <div class="schem-node">Rooms</div>
+        <div class="schem-arrow">+</div>
+        <div class="schem-node">Extras</div>
+      </div>
+      <div class="schem-out">
+        <span>Instant estimate</span>
+        <span class="amount">$212</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="how">
+  <div class="container">
+    <div class="section-head">
+      <div class="kicker">Process</div>
+      <h2>How a build actually happens</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="num mono">01</div>
+        <h3>You describe the tool</h3>
+        <p>What it needs to calculate or capture, and how your business actually prices or handles the work.</p>
+      </div>
+      <div class="step">
+        <div class="num mono">02</div>
+        <h3>It gets built</h3>
+        <p>A working version, matched to your branding, ready to test — usually within a few days.</p>
+      </div>
+      <div class="step">
+        <div class="num mono">03</div>
+        <h3>You take it live</h3>
+        <p>Drop it into your existing site, or use it as a standalone page. Simple fixes after launch are included.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="builds" style="background:var(--card); border-top:1px solid #DCE1E6; border-bottom:1px solid #DCE1E6;">
+  <div class="container">
+    <div class="section-head">
+      <div class="kicker">Recent builds</div>
+      <h2>Two examples of the same idea, done differently</h2>
+    </div>
+    <div class="builds">
+      <div class="build-card">
+        <div class="build-swatch swatch-1"></div>
+        <div class="build-body">
+          <div class="build-tag">Cleaning service</div>
+          <h3>Instant Quote Calculator</h3>
+          <p>Homeowners plug in size, rooms, and add-ons and get a live, itemized estimate — no back-and-forth emails.</p>
+          <ul class="build-feats">
+            <li>Live pricing by square footage &amp; cleaning type</li>
+            <li>Frequency discounts built in</li>
+            <li>Itemized receipt-style breakdown</li>
+          </ul>
+          <a class="build-cta" href="cleaning-quote-calculator.html" target="_blank">View live demo →</a>
+        </div>
+      </div>
+      <div class="build-card">
+        <div class="build-swatch swatch-2"></div>
+        <div class="build-body">
+          <div class="build-tag">Moving company</div>
+          <h3>Instant Moving Quote</h3>
+          <p>Estimates labor, mileage, and heavy-item fees on the fly, with a visual truck-capacity gauge as you build the move.</p>
+          <ul class="build-feats">
+            <li>Crew size &amp; hours scale with home size</li>
+            <li>Mileage surcharge past a free radius</li>
+            <li>Add-ons for pianos, stairs, packing service</li>
+          </ul>
+          <a class="build-cta" href="moving-quote-calculator.html" target="_blank">View live demo →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="container">
+    <div class="section-head">
+      <div class="kicker">Pricing</div>
+      <h2>Simple, scoped, upfront</h2>
+    </div>
+    <div class="pricing">
+      <div class="price-card">
+        <div class="price-name">One tool</div>
+        <div class="price-amount">$150<span>–$300</span></div>
+        <ul>
+          <li>One calculator, form, or tracker</li>
+          <li>Matched to your branding</li>
+          <li>Delivered in 3–5 days</li>
+        </ul>
+      </div>
+      <div class="price-card featured">
+        <div class="price-name">Tool + light site</div>
+        <div class="price-amount">$400<span>–$600</span></div>
+        <ul>
+          <li>Custom tool, embedded</li>
+          <li>Simple one-page site around it</li>
+          <li>One round of revisions</li>
+        </ul>
+      </div>
+      <div class="price-card">
+        <div class="price-name">Ongoing care</div>
+        <div class="price-amount">$25<span>/mo</span></div>
+        <ul>
+          <li>Small tweaks &amp; pricing updates</li>
+          <li>Hosting help</li>
+          <li>Cancel anytime</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="container">
+    <div class="section-head">
+      <div class="kicker">Get in touch</div>
+      <h2>Tell me what your business needs</h2>
+    </div>
+    <div class="contact-wrap">
+      <form action="https://formsubmit.co/fergusmurray09@gmail.com" method="POST">
+        <input type="hidden" name="_subject" value="New inquiry from Toolwright site">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="true">
+        <div class="form-row">
+          <label>Business name</label>
+          <input type="text" name="Business name" placeholder="e.g. Fresh Start Cleaning Co." required>
+        </div>
+        <div class="form-row">
+          <label>Email</label>
+          <input type="email" name="Email" placeholder="you@business.com" required>
+        </div>
+        <div class="form-row">
+          <label>What do you need?</label>
+          <textarea name="Message" placeholder="A quote calculator, a booking form, something else..." required></textarea>
+        </div>
+        <button class="submit-btn" type="submit">Send it over</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>Toolwright — built one specific thing at a time.</footer>
+
+</body>
+</html>
