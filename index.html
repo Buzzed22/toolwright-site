@@ -242,6 +242,17 @@
     background:var(--go); color:white; font-weight:700; font-size:14px; cursor:pointer;
     margin-top:6px;
   }
+  .form-thanks{
+    display:none;
+    background:rgba(47,168,138,0.15);
+    border:1px solid var(--go);
+    color:#B7EDDD;
+    border-radius:8px;
+    padding:14px 16px;
+    font-size:14px;
+    margin-bottom:18px;
+  }
+  .form-thanks.show{ display:block; }
 
   footer{
     text-align:center; padding:30px 24px;
@@ -398,11 +409,14 @@
       <h2>Tell me what your business needs</h2>
     </div>
     <div class="contact-wrap">
-      <form action="https://formsubmit.co/1aaa13e5b818b714dc75bbdc23cdfb34" method="POST">
+      <div class="form-thanks" id="formThanks">
+        <strong>Thanks — got it!</strong> I'll get back to you shortly.
+      </div>
+      <form action="https://formsubmit.co/1aaa13e5b818b714dc75bbdc23cdfb34" method="POST" id="contactForm">
         <input type="hidden" name="_subject" value="New inquiry from Toolwright site">
         <input type="hidden" name="_template" value="table">
         <input type="hidden" name="_captcha" value="true">
-        <input type="hidden" name="_next" value="https://buzzed22.github.io/toolwright-site/index.html">
+        <input type="hidden" name="_next" value="https://buzzed22.github.io/toolwright-site/index.html?sent=true">
         <div class="form-row">
           <label>Business name</label>
           <input type="text" name="Business name" placeholder="e.g. Fresh Start Cleaning Co." required>
@@ -422,6 +436,16 @@
 </section>
 
 <footer>Toolwright — built one specific thing at a time.</footer>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  if(params.get('sent') === 'true'){
+    document.getElementById('formThanks').classList.add('show');
+    document.getElementById('contactForm').reset();
+    document.getElementById('formThanks').scrollIntoView({behavior:'smooth', block:'center'});
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+</script>
 
 </body>
 </html>
