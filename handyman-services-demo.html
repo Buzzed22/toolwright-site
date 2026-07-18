@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Handyman Services Carlisle — Instant Quote</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #EDEFF0;
+    --card: #FFFFFF;
+    --ink: #262A2E;
+    --ink-soft: #5C646B;
+    --steel: #2C4A5E;
+    --amber: #D9A441;
+    --line: #DADEE1;
+    --radius: 12px;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Inter', sans-serif; padding:40px 20px;
+  }
+  .wrap{ max-width:980px; margin:0 auto; }
+  .masthead{
+    display:flex; align-items:baseline; justify-content:space-between;
+    margin-bottom:26px; flex-wrap:wrap; gap:10px;
+  }
+  .brand{
+    font-family:'Oswald', sans-serif; font-weight:700; font-size:28px;
+    text-transform:uppercase; letter-spacing:0.01em; color:var(--steel);
+  }
+  .brand span{ color:var(--amber); }
+  .tag{ font-size:12px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.09em; }
+
+  .grid{ display:grid; grid-template-columns: 1.3fr 1fr; gap:26px; }
+  @media (max-width:780px){ .grid{ grid-template-columns:1fr; } }
+
+  .card{ background:var(--card); border-radius:var(--radius); border:1px solid var(--line); padding:28px; }
+  h2{
+    font-family:'Oswald', sans-serif; text-transform:uppercase; letter-spacing:0.02em;
+    font-weight:600; font-size:18px; margin:0 0 20px 0; color:var(--steel);
+  }
+  .field{ margin-bottom:22px; }
+  .field label{ display:flex; justify-content:space-between; font-size:14px; font-weight:500; margin-bottom:8px; }
+  .field label .val{ font-family:'Space Mono', monospace; color:var(--amber); font-weight:700; }
+  input[type=range]{ width:100%; accent-color: var(--steel); }
+
+  .pillgrid{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+  .pill{
+    padding:10px 12px; border-radius:8px; border:1px solid var(--line);
+    background:var(--bg); font-size:13px; cursor:pointer; color:var(--ink-soft); text-align:center;
+  }
+  .pill.active{ background:var(--steel); color:white; border-color:var(--steel); }
+
+  .checks{ display:flex; flex-direction:column; gap:10px; }
+  .check{ display:flex; align-items:center; gap:10px; font-size:14px; cursor:pointer; }
+  .check input{ accent-color: var(--amber); width:16px; height:16px; }
+  .check .price{ margin-left:auto; font-family:'Space Mono', monospace; color:var(--ink-soft); font-size:13px; }
+
+  .ticket{ background:var(--steel); color:white; border-radius:var(--radius); padding:26px; }
+  .ticket h2{ color:white; }
+  .t-line{
+    display:flex; justify-content:space-between; font-family:'Space Mono', monospace;
+    font-size:13px; padding:8px 0; border-bottom:1px dashed rgba(255,255,255,0.25);
+  }
+  .t-line.muted{ opacity:0.75; }
+  .t-total{ display:flex; justify-content:space-between; align-items:baseline; margin-top:16px; }
+  .t-total .amount{ font-family:'Space Mono', monospace; font-size:34px; font-weight:700; color:#F1D294; }
+  .cta{
+    display:block; width:100%; margin-top:18px; padding:14px; border:none; border-radius:8px;
+    background:var(--amber); color:#262A2E; font-family:'Inter', sans-serif; font-weight:700; font-size:14px; cursor:pointer;
+  }
+  .note{ text-align:center; font-size:11px; color:var(--ink-soft); margin-top:10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="masthead">
+    <div class="brand">Handyman <span>Services</span> Carlisle</div>
+    <div class="tag">Instant Quote</div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Describe the job</h2>
+
+      <div class="field">
+        <label>Job type</label>
+        <div class="pillgrid" id="typeRow">
+          <div class="pill active" data-mult="0.9">Furniture assembly</div>
+          <div class="pill" data-mult="1.1">Painting &amp; decorating</div>
+          <div class="pill" data-mult="1.0">General repairs</div>
+          <div class="pill" data-mult="0.9">Shelving &amp; mounting</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Estimated hours <span class="val" id="hoursVal">2 hrs</span></label>
+        <input type="range" id="hours" min="1" max="8" step="0.5" value="2">
+      </div>
+
+      <div class="field">
+        <label>Urgency</label>
+        <div class="pillgrid" id="urgRow">
+          <div class="pill active" data-mult="1">Standard</div>
+          <div class="pill" data-mult="1.25">Same-day</div>
+        </div>
+      </div>
+
+      <div class="field" style="margin-bottom:0;">
+        <label>Add-ons</label>
+        <div class="checks">
+          <label class="check"><input type="checkbox" class="extra" data-price="30" data-label="Materials needed"> Materials needed <span class="price">+£30 est.</span></label>
+          <label class="check"><input type="checkbox" class="extra" data-price="15" data-label="Rubbish removal"> Rubbish removal <span class="price">+£15</span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="ticket">
+      <h2>Estimate</h2>
+      <div class="t-line"><span id="rType">Furniture assembly · 2 hrs</span><span id="rBase">£—</span></div>
+      <div class="t-line muted" id="rUrgRow" style="display:none;"><span>Same-day callout</span><span id="rUrgVal">£0</span></div>
+      <div id="rExtras"></div>
+      <div class="t-total">
+        <span>Total</span>
+        <span class="amount" id="rTotal">£0</span>
+      </div>
+      <button class="cta">Request this job</button>
+      <div class="note">Estimate only — Vasil confirms final price on inspection</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('#typeRow .pill').forEach(p=>{
+    p.addEventListener('click', ()=>{
+      document.querySelectorAll('#typeRow .pill').forEach(x=>x.classList.remove('active'));
+      p.classList.add('active');
+      calc();
+    });
+  });
+
+  document.querySelectorAll('#urgRow .pill').forEach(p=>{
+    p.addEventListener('click', ()=>{
+      document.querySelectorAll('#urgRow .pill').forEach(x=>x.classList.remove('active'));
+      p.classList.add('active');
+      calc();
+    });
+  });
+
+  document.getElementById('hours').addEventListener('input', calc);
+  document.querySelectorAll('.extra').forEach(c=> c.addEventListener('change', calc));
+
+  function calc(){
+    const hours = parseFloat(document.getElementById('hours').value);
+    document.getElementById('hoursVal').textContent = hours + ' hrs';
+
+    const typePill = document.querySelector('#typeRow .pill.active');
+    const mult = parseFloat(typePill.dataset.mult);
+    const typeName = typePill.textContent;
+
+    const rate = 22;
+    const base = hours * rate * mult;
+
+    const urgPill = document.querySelector('#urgRow .pill.active');
+    const urgMult = parseFloat(urgPill.dataset.mult);
+    const urgFee = base * (urgMult - 1);
+
+    let extrasTotal = 0;
+    let extrasHtml = '';
+    document.querySelectorAll('.extra:checked').forEach(c=>{
+      const price = parseFloat(c.dataset.price);
+      extrasTotal += price;
+      extrasHtml += `<div class="t-line muted"><span>${c.dataset.label}</span><span>+£${price}</span></div>`;
+    });
+
+    const total = base + urgFee + extrasTotal;
+
+    document.getElementById('rType').textContent = `${typeName} · ${hours} hrs`;
+    document.getElementById('rBase').textContent = `£${base.toFixed(0)}`;
+
+    const urgRow = document.getElementById('rUrgRow');
+    if(urgFee > 0){
+      urgRow.style.display = 'flex';
+      document.getElementById('rUrgVal').textContent = `+£${urgFee.toFixed(0)}`;
+    } else {
+      urgRow.style.display = 'none';
+    }
+
+    document.getElementById('rExtras').innerHTML = extrasHtml;
+    document.getElementById('rTotal').textContent = `£${total.toFixed(0)}`;
+  }
+
+  calc();
+</script>
+</body>
+</html>
