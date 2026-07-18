@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Julia Cannar PT — Package Calculator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #EFF0F2;
+    --card: #FFFFFF;
+    --ink: #2B2530;
+    --ink-soft: #635C68;
+    --plum: #4A314D;
+    --coral: #E8735C;
+    --line: #DEDCE2;
+    --radius: 14px;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Inter', sans-serif; padding:40px 20px;
+  }
+  .wrap{ max-width:980px; margin:0 auto; }
+  .masthead{
+    display:flex; align-items:baseline; justify-content:space-between;
+    margin-bottom:26px; flex-wrap:wrap; gap:10px;
+  }
+  .brand{ font-family:'Sora', sans-serif; font-weight:700; font-size:26px; color:var(--plum); }
+  .brand span{ color:var(--coral); }
+  .tag{ font-size:12px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.09em; }
+
+  .grid{ display:grid; grid-template-columns: 1.3fr 1fr; gap:26px; }
+  @media (max-width:780px){ .grid{ grid-template-columns:1fr; } }
+
+  .card{ background:var(--card); border-radius:var(--radius); border:1px solid var(--line); padding:28px; }
+  h2{ font-family:'Sora', sans-serif; font-weight:700; font-size:19px; margin:0 0 20px 0; color:var(--plum); }
+  .field{ margin-bottom:22px; }
+  .field label{ display:flex; justify-content:space-between; font-size:14px; font-weight:500; margin-bottom:8px; }
+  .field label .val{ font-family:'Space Mono', monospace; color:var(--coral); font-weight:700; }
+
+  .pillrow{ display:flex; gap:8px; flex-wrap:wrap; }
+  .pill{
+    padding:9px 14px; border-radius:999px; border:1px solid var(--line);
+    background:var(--bg); font-size:13px; cursor:pointer; color:var(--ink-soft);
+  }
+  .pill.active{ background:var(--plum); color:white; border-color:var(--plum); }
+
+  .stepper{ display:flex; align-items:center; gap:14px; }
+  .stepper button{
+    width:32px; height:32px; border-radius:8px; border:1px solid var(--line);
+    background:var(--bg); color:var(--plum); font-size:16px; font-weight:700; cursor:pointer;
+  }
+  .stepper button:hover{ background:var(--plum); color:white; }
+  .stepper .count{ font-family:'Space Mono', monospace; font-size:16px; min-width:18px; text-align:center; }
+
+  .checks{ display:flex; flex-direction:column; gap:10px; }
+  .check{ display:flex; align-items:center; gap:10px; font-size:14px; cursor:pointer; }
+  .check input{ accent-color: var(--coral); width:16px; height:16px; }
+  .check .price{ margin-left:auto; font-family:'Space Mono', monospace; color:var(--ink-soft); font-size:13px; }
+
+  .ticket{ background:var(--plum); color:white; border-radius:var(--radius); padding:26px; }
+  .ticket h2{ color:white; }
+  .t-line{
+    display:flex; justify-content:space-between; font-family:'Space Mono', monospace;
+    font-size:13px; padding:8px 0; border-bottom:1px dashed rgba(255,255,255,0.25);
+  }
+  .t-line.muted{ opacity:0.75; }
+  .t-total{ display:flex; justify-content:space-between; align-items:baseline; margin-top:16px; }
+  .t-total .amount{ font-family:'Space Mono', monospace; font-size:34px; font-weight:700; color:#F4B8A6; }
+  .cta{
+    display:block; width:100%; margin-top:18px; padding:14px; border:none; border-radius:8px;
+    background:var(--coral); color:white; font-family:'Inter', sans-serif; font-weight:700; font-size:14px; cursor:pointer;
+  }
+  .note{ text-align:center; font-size:11px; color:var(--ink-soft); margin-top:10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="masthead">
+    <div class="brand">Julia Cannar <span>PT</span></div>
+    <div class="tag">Package Calculator · Carlisle</div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Build your package</h2>
+
+      <div class="field">
+        <label>Session format</label>
+        <div class="pillrow" id="formatRow">
+          <div class="pill active" data-rate="35" data-label="1:1 In-person">1:1 In-person</div>
+          <div class="pill" data-rate="25" data-label="1:1 Online">1:1 Online</div>
+          <div class="pill" data-rate="20" data-label="Small group">Small group</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Sessions per week</label>
+        <div class="stepper">
+          <button onclick="step(-1)">−</button>
+          <div class="count" id="sessVal">2</div>
+          <button onclick="step(1)">+</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Package length</label>
+        <div class="pillrow" id="lengthRow">
+          <div class="pill" data-weeks="4" data-disc="0">4 weeks</div>
+          <div class="pill active" data-weeks="8" data-disc="0.05">8 weeks</div>
+          <div class="pill" data-weeks="12" data-disc="0.10">12 weeks</div>
+          <div class="pill" data-weeks="24" data-disc="0.15">24 weeks</div>
+        </div>
+      </div>
+
+      <div class="field" style="margin-bottom:0;">
+        <label>Add-ons</label>
+        <div class="checks">
+          <label class="check"><input type="checkbox" class="extra" data-price="25" data-label="Fitness assessment"> Fitness assessment <span class="price">+£25</span></label>
+          <label class="check"><input type="checkbox" class="extra" data-price="40" data-label="Nutrition guidance"> Nutrition guidance <span class="price">+£40</span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="ticket">
+      <h2>Estimate</h2>
+      <div class="t-line"><span id="rFormat">1:1 In-person · 16 sessions</span><span id="rBase">£—</span></div>
+      <div class="t-line muted" id="rDiscRow" style="display:none;"><span id="rDiscLabel"></span><span id="rDiscVal"></span></div>
+      <div id="rExtras"></div>
+      <div class="t-total">
+        <span id="rLenLabel">8-week package</span>
+        <span class="amount" id="rTotal">£0</span>
+      </div>
+      <button class="cta">Enquire about this package</button>
+      <div class="note">Estimate only — Julia confirms details in your free consultation</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let sessionsPerWeek = 2;
+
+  document.querySelectorAll('#formatRow .pill').forEach(p=>{
+    p.addEventListener('click', ()=>{
+      document.querySelectorAll('#formatRow .pill').forEach(x=>x.classList.remove('active'));
+      p.classList.add('active');
+      calc();
+    });
+  });
+
+  document.querySelectorAll('#lengthRow .pill').forEach(p=>{
+    p.addEventListener('click', ()=>{
+      document.querySelectorAll('#lengthRow .pill').forEach(x=>x.classList.remove('active'));
+      p.classList.add('active');
+      calc();
+    });
+  });
+
+  function step(dir){
+    sessionsPerWeek = Math.max(1, Math.min(5, sessionsPerWeek+dir));
+    document.getElementById('sessVal').textContent = sessionsPerWeek;
+    calc();
+  }
+
+  document.querySelectorAll('.extra').forEach(c=> c.addEventListener('change', calc));
+
+  function calc(){
+    const formatPill = document.querySelector('#formatRow .pill.active');
+    const rate = parseFloat(formatPill.dataset.rate);
+    const formatName = formatPill.dataset.label;
+
+    const lengthPill = document.querySelector('#lengthRow .pill.active');
+    const weeks = parseInt(lengthPill.dataset.weeks);
+    const disc = parseFloat(lengthPill.dataset.disc);
+
+    const totalSessions = sessionsPerWeek * weeks;
+    const base = totalSessions * rate;
+    const discAmt = base * disc;
+
+    let extrasTotal = 0;
+    let extrasHtml = '';
+    document.querySelectorAll('.extra:checked').forEach(c=>{
+      const price = parseFloat(c.dataset.price);
+      extrasTotal += price;
+      extrasHtml += `<div class="t-line muted"><span>${c.dataset.label}</span><span>+£${price}</span></div>`;
+    });
+
+    const total = base - discAmt + extrasTotal;
+
+    document.getElementById('rFormat').textContent = `${formatName} · ${totalSessions} sessions`;
+    document.getElementById('rBase').textContent = `£${base.toFixed(0)}`;
+
+    const discRow = document.getElementById('rDiscRow');
+    if(disc > 0){
+      discRow.style.display = 'flex';
+      document.getElementById('rDiscLabel').textContent = `Package discount (${(disc*100).toFixed(0)}%)`;
+      document.getElementById('rDiscVal').textContent = `−£${discAmt.toFixed(0)}`;
+    } else {
+      discRow.style.display = 'none';
+    }
+
+    document.getElementById('rExtras').innerHTML = extrasHtml;
+    document.getElementById('rLenLabel').textContent = `${weeks}-week package`;
+    document.getElementById('rTotal').textContent = `£${total.toFixed(0)}`;
+  }
+
+  calc();
+</script>
+</body>
+</html>
