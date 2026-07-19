@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Peachy Clean Carlisle — Instant Quote</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #EAF1F2;
+    --card: #FFFFFF;
+    --ink: #1E2E30;
+    --ink-soft: #5A6E71;
+    --teal: #2E6E71;
+    --peach: #F0916D;
+    --line: #DAE4E5;
+    --radius: 14px;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Inter', sans-serif; padding:40px 20px;
+  }
+  .wrap{ max-width:980px; margin:0 auto; }
+  .masthead{
+    display:flex; align-items:baseline; justify-content:space-between;
+    margin-bottom:26px; flex-wrap:wrap; gap:10px;
+  }
+  .brand{ font-family:'Poppins', sans-serif; font-weight:700; font-size:26px; color:var(--teal); }
+  .brand span{ color:var(--peach); }
+  .tag{ font-size:12px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.09em; }
+
+  .grid{ display:grid; grid-template-columns: 1.3fr 1fr; gap:26px; }
+  @media (max-width:780px){ .grid{ grid-template-columns:1fr; } }
+
+  .card{ background:var(--card); border-radius:var(--radius); border:1px solid var(--line); padding:28px; }
+  h2{ font-family:'Poppins', sans-serif; font-weight:700; font-size:19px; margin:0 0 20px 0; color:var(--teal); }
+  .field{ margin-bottom:22px; }
+  .field label{ display:flex; justify-content:space-between; font-size:14px; font-weight:500; margin-bottom:8px; }
+
+  .stepper{ display:flex; align-items:center; gap:14px; }
+  .stepper button{
+    width:32px; height:32px; border-radius:8px; border:1px solid var(--line);
+    background:var(--bg); color:var(--teal); font-size:16px; font-weight:700; cursor:pointer;
+  }
+  .stepper button:hover{ background:var(--teal); color:white; }
+  .stepper .count{ font-family:'Space Mono', monospace; font-size:16px; min-width:18px; text-align:center; }
+
+  .pillrow{ display:flex; gap:8px; flex-wrap:wrap; }
+  .pill{
+    padding:9px 14px; border-radius:999px; border:1px solid var(--line);
+    background:var(--bg); font-size:13px; cursor:pointer; color:var(--ink-soft);
+  }
+  .pill.active{ background:var(--teal); color:white; border-color:var(--teal); }
+
+  .checks{ display:flex; flex-direction:column; gap:10px; }
+  .check{ display:flex; align-items:center; gap:10px; font-size:14px; cursor:pointer; }
+  .check input{ accent-color: var(--peach); width:16px; height:16px; }
+  .check .price{ margin-left:auto; font-family:'Space Mono', monospace; color:var(--ink-soft); font-size:13px; }
+
+  .ticket{ background:var(--teal); color:white; border-radius:var(--radius); padding:26px; }
+  .ticket h2{ color:white; }
+  .t-line{
+    display:flex; justify-content:space-between; font-family:'Space Mono', monospace;
+    font-size:13px; padding:8px 0; border-bottom:1px dashed rgba(255,255,255,0.25);
+  }
+  .t-line.muted{ opacity:0.75; }
+  .t-total{ display:flex; justify-content:space-between; align-items:baseline; margin-top:16px; }
+  .t-total .amount{ font-family:'Space Mono', monospace; font-size:34px; font-weight:700; color:#FBCBB4; }
+  .cta{
+    display:block; width:100%; margin-top:18px; padding:14px; border:none; border-radius:10px;
+    background:var(--peach); color:white; font-family:'Inter', sans-serif; font-weight:700; font-size:14px; cursor:pointer;
+  }
+  .note{ text-align:center; font-size:11px; color:var(--ink-soft); margin-top:10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="masthead">
+    <div class="brand">Peachy <span>Clean</span> Carlisle</div>
+    <div class="tag">Instant Quote</div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Your carpets</h2>
+
+      <div class="field">
+        <label>Rooms to clean</label>
+        <div class="stepper">
+          <button onclick="step(-1)">−</button>
+          <div class="count" id="roomsVal">2</div>
+          <button onclick="step(1)">+</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Average room size</label>
+        <div class="pillrow" id="sizeRow">
+          <div class="pill active" data-rate="25">Small</div>
+          <div class="pill" data-rate="32">Medium</div>
+          <div class="pill" data-rate="40">Large</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Stain level</label>
+        <div class="pillrow" id="stainRow">
+          <div class="pill active" data-fee="0">Light / none</div>
+          <div class="pill" data-fee="10">Moderate</div>
+          <div class="pill" data-fee="20">Heavy</div>
+        </div>
+      </div>
+
+      <div class="field" style="margin-bottom:0;">
+        <label>Add-ons</label>
+        <div class="checks">
+          <label class="check"><input type="checkbox" class="extra" data-price="45" data-label="3-seater sofa clean"> 3-seater sofa clean <span class="price">+£45</span></label>
+          <label class="check"><input type="checkbox" class="extra" data-price="35" data-label="2-seater sofa clean"> 2-seater sofa clean <span class="price">+£35</span></label>
+          <label class="check"><input type="checkbox" class="extra" data-price="20" data-label="Rug cleaning"> Rug cleaning <span class="price">+£20</span></label>
+          <label class="check"><input type="checkbox" class="extra" data-price="25" data-label="Pet odour treatment"> Pet odour treatment <span class="price">+£25</span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="ticket">
+      <h2>Estimate</h2>
+      <div class="t-line"><span id="rRooms">2 rooms · Small</span><span id="rBase">£—</span></div>
+      <div class="t-line muted" id="rStainRow" style="display:none;"><span id="rStainLabel"></span><span id="rStainVal">£0</span></div>
+      <div id="rExtras"></div>
+      <div class="t-total">
+        <span>Total</span>
+        <span class="amount" id="rTotal">£0</span>
+      </div>
+      <button class="cta">Book this clean</button>
+      <div class="note">Estimate only — Kaylie confirms final price on-site</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let rooms = 2;
+
+  function step(dir){
+    rooms = Math.max(1, Math.min(8, rooms+dir));
+    document.getElementById('roomsVal').textContent = rooms;
+    calc();
+  }
+
+  document.querySelectorAll('#sizeRow .pill').forEach(p=>{
+    p.addEventListener('click', ()=>{
+      document.querySelectorAll('#sizeRow .pill').forEach(x=>x.classList.remove('active'));
+      p.classList.add('active');
+      calc();
+    });
+  });
+
+  document.querySelectorAll('#stainRow .pill').forEach(p=>{
+    p.addEventListener('click', ()=>{
+      document.querySelectorAll('#stainRow .pill').forEach(x=>x.classList.remove('active'));
+      p.classList.add('active');
+      calc();
+    });
+  });
+
+  document.querySelectorAll('.extra').forEach(c=> c.addEventListener('change', calc));
+
+  function calc(){
+    const sizePill = document.querySelector('#sizeRow .pill.active');
+    const rate = parseFloat(sizePill.dataset.rate);
+    const sizeName = sizePill.textContent;
+
+    const stainPill = document.querySelector('#stainRow .pill.active');
+    const stainFee = parseFloat(stainPill.dataset.fee);
+    const stainName = stainPill.textContent;
+
+    const base = rooms * rate;
+
+    let extrasTotal = 0;
+    let extrasHtml = '';
+    document.querySelectorAll('.extra:checked').forEach(c=>{
+      const price = parseFloat(c.dataset.price);
+      extrasTotal += price;
+      extrasHtml += `<div class="t-line muted"><span>${c.dataset.label}</span><span>+£${price}</span></div>`;
+    });
+
+    const total = base + stainFee + extrasTotal;
+
+    document.getElementById('rRooms').textContent = `${rooms} room${rooms>1?'s':''} · ${sizeName}`;
+    document.getElementById('rBase').textContent = `£${base.toFixed(0)}`;
+
+    const stainRow = document.getElementById('rStainRow');
+    if(stainFee > 0){
+      stainRow.style.display = 'flex';
+      document.getElementById('rStainLabel').textContent = `${stainName} stain treatment`;
+      document.getElementById('rStainVal').textContent = `+£${stainFee.toFixed(0)}`;
+    } else {
+      stainRow.style.display = 'none';
+    }
+
+    document.getElementById('rExtras').innerHTML = extrasHtml;
+    document.getElementById('rTotal').textContent = `£${total.toFixed(0)}`;
+  }
+
+  calc();
+</script>
+</body>
+</html>
