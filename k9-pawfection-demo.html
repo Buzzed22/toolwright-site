@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>K9 Pawfection — Instant Quote</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F2EFF5;
+    --card: #FFFFFF;
+    --ink: #322C3D;
+    --ink-soft: #6B6478;
+    --lav: #7C6A96;
+    --coral: #E8886B;
+    --line: #E0DCE8;
+    --radius: 16px;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Inter', sans-serif; padding:40px 20px;
+  }
+  .wrap{ max-width:980px; margin:0 auto; }
+  .masthead{
+    display:flex; align-items:baseline; justify-content:space-between;
+    margin-bottom:26px; flex-wrap:wrap; gap:10px;
+  }
+  .brand{ font-family:'Baloo 2', sans-serif; font-weight:700; font-size:30px; color:var(--lav); }
+  .brand span{ color:var(--coral); }
+  .tag{ font-size:12px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.09em; }
+
+  .grid{ display:grid; grid-template-columns: 1.3fr 1fr; gap:26px; }
+  @media (max-width:780px){ .grid{ grid-template-columns:1fr; } }
+
+  .card{ background:var(--card); border-radius:var(--radius); border:1px solid var(--line); padding:28px; }
+  h2{ font-family:'Baloo 2', sans-serif; font-weight:700; font-size:20px; margin:0 0 20px 0; color:var(--lav); }
+  .field{ margin-bottom:22px; }
+  .field label{ display:flex; justify-content:space-between; font-size:14px; font-weight:500; margin-bottom:8px; }
+
+  .pillgrid{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+  .pillrow{ display:flex; gap:8px; flex-wrap:wrap; }
+  .pill{
+    padding:9px 14px; border-radius:999px; border:1px solid var(--line);
+    background:var(--bg); font-size:13px; cursor:pointer; color:var(--ink-soft); text-align:center;
+  }
+  .pillgrid .pill{ border-radius:10px; }
+  .pill.active{ background:var(--lav); color:white; border-color:var(--lav); }
+
+  .checks{ display:flex; flex-direction:column; gap:10px; }
+  .check{ display:flex; align-items:center; gap:10px; font-size:14px; cursor:pointer; }
+  .check input{ accent-color: var(--coral); width:16px; height:16px; }
+  .check .price{ margin-left:auto; font-family:'Space Mono', monospace; color:var(--ink-soft); font-size:13px; }
+
+  .ticket{ background:var(--lav); color:white; border-radius:var(--radius); padding:26px; }
+  .ticket h2{ color:white; }
+  .t-line{
+    display:flex; justify-content:space-between; font-family:'Space Mono', monospace;
+    font-size:13px; padding:8px 0; border-bottom:1px dashed rgba(255,255,255,0.25);
+  }
+  .t-line.muted{ opacity:0.75; }
+  .t-total{ display:flex; justify-content:space-between; align-items:baseline; margin-top:16px; }
+  .t-total .amount{ font-family:'Space Mono', monospace; font-size:34px; font-weight:700; color:#FBD3C2; }
+  .cta{
+    display:block; width:100%; margin-top:18px; padding:14px; border:none; border-radius:10px;
+    background:var(--coral); color:white; font-family:'Inter', sans-serif; font-weight:700; font-size:14px; cursor:pointer;
+  }
+  .note{ text-align:center; font-size:11px; color:var(--ink-soft); margin-top:10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="masthead">
+    <div class="brand">K9 <span>Pawfection</span></div>
+    <div class="tag">Instant Quote · Carlisle</div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Tell us about your dog</h2>
+
+      <div class="field">
+        <label>Dog size</label>
+        <div class="pillgrid" id="sizeRow">
+          <div class="pill active" data-rate="30">Small</div>
+          <div class="pill" data-rate="38">Medium</div>
+          <div class="pill" data-rate="48">Large</div>
+          <div class="pill" data-rate="58">XL / Giant</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Service</label>
+        <div class="pillrow" id="serviceRow">
+          <div class="pill active" data-mult="1">Full groom</div>
+          <div class="pill" data-mult="0.6">Bath only</div>
+          <div class="pill" data-mult="0.5">Puppy intro</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Coat condition</label>
+        <div class="pillrow" id="coatRow">
+          <div class="pill active" data-fee="0">Regular</div>
+          <div class="pill" data-fee="10">Matted / heavy shed</div>
+        </div>
+      </div>
+
+      <div class="field" style="margin-bottom:0;">
+        <label>Add-ons</label>
+        <div class="checks">
+          <label class="check"><input type="checkbox" class="extra" data-price="8" data-label="Nail trim"> Nail trim <span class="price">+£8</span></label>
+          <label class="check"><input type="checkbox" class="extra" data-price="6" data-label="Ear cleaning"> Ear cleaning <span class="price">+£6</span></label>
+          <label class="check"><input type="checkbox" class="extra" data-price="12" data-label="De-shed treatment"> De-shed treatment <span class="price">+£12</span></label>
+          <label class="check"><input type="checkbox" class="extra" data-price="5" data-label="Teeth brushing"> Teeth brushing <span class="price">+£5</span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="ticket">
+      <h2>Estimate</h2>
+      <div class="t-line"><span id="rSize">Small · Full groom</span><span id="rBase">£—</span></div>
+      <div class="t-line muted" id="rCoatRow" style="display:none;"><span>Matted / heavy shed</span><span id="rCoatVal">+£0</span></div>
+      <div id="rExtras"></div>
+      <div class="t-total">
+        <span>Total</span>
+        <span class="amount" id="rTotal">£0</span>
+      </div>
+      <button class="cta">Book this groom</button>
+      <div class="note">Estimate only — Nadia confirms final price on meeting your dog</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('#sizeRow .pill').forEach(p=>{
+    p.addEventListener('click', ()=>{
+      document.querySelectorAll('#sizeRow .pill').forEach(x=>x.classList.remove('active'));
+      p.classList.add('active');
+      calc();
+    });
+  });
+
+  document.querySelectorAll('#serviceRow .pill').forEach(p=>{
+    p.addEventListener('click', ()=>{
+      document.querySelectorAll('#serviceRow .pill').forEach(x=>x.classList.remove('active'));
+      p.classList.add('active');
+      calc();
+    });
+  });
+
+  document.querySelectorAll('#coatRow .pill').forEach(p=>{
+    p.addEventListener('click', ()=>{
+      document.querySelectorAll('#coatRow .pill').forEach(x=>x.classList.remove('active'));
+      p.classList.add('active');
+      calc();
+    });
+  });
+
+  document.querySelectorAll('.extra').forEach(c=> c.addEventListener('change', calc));
+
+  function calc(){
+    const sizePill = document.querySelector('#sizeRow .pill.active');
+    const rate = parseFloat(sizePill.dataset.rate);
+    const sizeName = sizePill.textContent;
+
+    const servicePill = document.querySelector('#serviceRow .pill.active');
+    const mult = parseFloat(servicePill.dataset.mult);
+    const serviceName = servicePill.textContent;
+
+    const coatPill = document.querySelector('#coatRow .pill.active');
+    const coatFee = parseFloat(coatPill.dataset.fee);
+
+    const base = rate * mult;
+
+    let extrasTotal = 0;
+    let extrasHtml = '';
+    document.querySelectorAll('.extra:checked').forEach(c=>{
+      const price = parseFloat(c.dataset.price);
+      extrasTotal += price;
+      extrasHtml += `<div class="t-line muted"><span>${c.dataset.label}</span><span>+£${price}</span></div>`;
+    });
+
+    const total = base + coatFee + extrasTotal;
+
+    document.getElementById('rSize').textContent = `${sizeName} · ${serviceName}`;
+    document.getElementById('rBase').textContent = `£${base.toFixed(0)}`;
+
+    const coatRow = document.getElementById('rCoatRow');
+    if(coatFee > 0){
+      coatRow.style.display = 'flex';
+      document.getElementById('rCoatVal').textContent = `+£${coatFee.toFixed(0)}`;
+    } else {
+      coatRow.style.display = 'none';
+    }
+
+    document.getElementById('rExtras').innerHTML = extrasHtml;
+    document.getElementById('rTotal').textContent = `£${total.toFixed(0)}`;
+  }
+
+  calc();
+</script>
+</body>
+</html>
