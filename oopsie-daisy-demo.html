@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Oopsie Daisy Flowers — Wedding Package Estimator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F3EDEF;
+    --card: #FFFFFF;
+    --ink: #362A30;
+    --ink-soft: #75636B;
+    --rose: #B5637D;
+    --forest: #3E5A46;
+    --line: #E6DBDF;
+    --radius: 14px;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Inter', sans-serif; padding:40px 20px;
+  }
+  .wrap{ max-width:980px; margin:0 auto; }
+  .masthead{
+    display:flex; align-items:baseline; justify-content:space-between;
+    margin-bottom:26px; flex-wrap:wrap; gap:10px;
+  }
+  .brand{ font-family:'Cormorant Garamond', serif; font-weight:700; font-size:32px; color:var(--forest); }
+  .brand span{ color:var(--rose); }
+  .tag{ font-size:12px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.09em; }
+
+  .grid{ display:grid; grid-template-columns: 1.3fr 1fr; gap:26px; }
+  @media (max-width:780px){ .grid{ grid-template-columns:1fr; } }
+
+  .card{ background:var(--card); border-radius:var(--radius); border:1px solid var(--line); padding:28px; }
+  h2{ font-family:'Cormorant Garamond', serif; font-weight:700; font-size:21px; margin:0 0 20px 0; color:var(--forest); }
+  .field{ margin-bottom:22px; }
+  .field label{ display:flex; justify-content:space-between; font-size:14px; font-weight:500; margin-bottom:8px; }
+
+  .pillcol{ display:flex; flex-direction:column; gap:8px; }
+  .pillrow{ display:flex; gap:8px; flex-wrap:wrap; }
+  .pill{
+    padding:10px 14px; border-radius:8px; border:1px solid var(--line);
+    background:var(--bg); font-size:13px; cursor:pointer; color:var(--ink-soft);
+  }
+  .pill.active{ background:var(--forest); color:white; border-color:var(--forest); }
+
+  .stepper{ display:flex; align-items:center; gap:14px; }
+  .stepper button{
+    width:32px; height:32px; border-radius:8px; border:1px solid var(--line);
+    background:var(--bg); color:var(--forest); font-size:16px; font-weight:700; cursor:pointer;
+  }
+  .stepper button:hover{ background:var(--forest); color:white; }
+  .stepper .count{ font-family:'Space Mono', monospace; font-size:16px; min-width:18px; text-align:center; }
+
+  .checks{ display:flex; flex-direction:column; gap:10px; }
+  .check{ display:flex; align-items:center; gap:10px; font-size:14px; cursor:pointer; }
+  .check input{ accent-color: var(--rose); width:16px; height:16px; }
+  .check .price{ margin-left:auto; font-family:'Space Mono', monospace; color:var(--ink-soft); font-size:13px; }
+
+  .ticket{ background:var(--forest); color:white; border-radius:var(--radius); padding:26px; }
+  .ticket h2{ color:white; }
+  .t-line{
+    display:flex; justify-content:space-between; font-family:'Space Mono', monospace;
+    font-size:13px; padding:8px 0; border-bottom:1px dashed rgba(255,255,255,0.2);
+  }
+  .t-line.muted{ opacity:0.75; }
+  .t-total{ display:flex; justify-content:space-between; align-items:baseline; margin-top:16px; }
+  .t-total .amount{ font-family:'Space Mono', monospace; font-size:34px; font-weight:700; color:#F0C4D3; }
+  .cta{
+    display:block; width:100%; margin-top:18px; padding:14px; border:none; border-radius:8px;
+    background:var(--rose); color:white; font-family:'Inter', sans-serif; font-weight:700; font-size:14px; cursor:pointer;
+  }
+  .note{ text-align:center; font-size:11px; color:var(--ink-soft); margin-top:10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="masthead">
+    <div class="brand">Oopsie Daisy <span>Flowers</span></div>
+    <div class="tag">Wedding Package Estimator</div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Your wedding flowers</h2>
+
+      <div class="field">
+        <label>Package</label>
+        <div class="pillcol" id="pkgRow">
+          <div class="pill active" data-base="180" data-name="Essentials — bouquet + 2 buttonholes">Essentials</div>
+          <div class="pill" data-base="320" data-name="Classic — + bridesmaids &amp; corsages">Classic</div>
+          <div class="pill" data-base="550" data-name="Deluxe — + venue &amp; ceremony flowers">Deluxe</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Bridesmaids (beyond first 2 included)</label>
+        <div class="stepper">
+          <button onclick="step(-1)">−</button>
+          <div class="count" id="bmVal">0</div>
+          <button onclick="step(1)">+</button>
+        </div>
+      </div>
+
+      <div class="field" style="margin-bottom:0;">
+        <label>Add-ons</label>
+        <div class="checks">
+          <label class="check"><input type="checkbox" class="extra" data-price="25" data-per-table="true" data-label="Table centrepieces"> Table centrepieces <span class="price">+£25/table</span></label>
+          <label class="check"><input type="checkbox" class="extra" data-price="120" data-label="Ceremony arch flowers"> Ceremony arch flowers <span class="price">+£120</span></label>
+          <label class="check"><input type="checkbox" class="extra" data-price="85" data-label="Preserved bouquet keepsake"> Preserved bouquet keepsake <span class="price">+£85</span></label>
+        </div>
+      </div>
+
+      <div class="field" id="tableField" style="display:none; margin-top:14px; margin-bottom:0;">
+        <label>Number of tables</label>
+        <div class="stepper">
+          <button onclick="stepTables(-1)">−</button>
+          <div class="count" id="tablesVal">6</div>
+          <button onclick="stepTables(1)">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="ticket">
+      <h2>Estimate</h2>
+      <div class="t-line"><span id="rPkg">Essentials</span><span id="rBase">£—</span></div>
+      <div class="t-line muted" id="rBmRow" style="display:none;"><span id="rBmLabel"></span><span id="rBmVal"></span></div>
+      <div id="rExtras"></div>
+      <div class="t-total">
+        <span>Total</span>
+        <span class="amount" id="rTotal">£0</span>
+      </div>
+      <button class="cta">Book a free consultation</button>
+      <div class="note">Estimate only — final quote confirmed at consultation</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let bridesmaids = 0;
+  let tables = 6;
+
+  document.querySelectorAll('#pkgRow .pill').forEach(p=>{
+    p.addEventListener('click', ()=>{
+      document.querySelectorAll('#pkgRow .pill').forEach(x=>x.classList.remove('active'));
+      p.classList.add('active');
+      calc();
+    });
+  });
+
+  function step(dir){
+    bridesmaids = Math.max(0, Math.min(8, bridesmaids+dir));
+    document.getElementById('bmVal').textContent = bridesmaids;
+    calc();
+  }
+
+  function stepTables(dir){
+    tables = Math.max(1, Math.min(30, tables+dir));
+    document.getElementById('tablesVal').textContent = tables;
+    calc();
+  }
+
+  document.querySelectorAll('.extra').forEach(c=>{
+    c.addEventListener('change', ()=>{
+      const tableCheckbox = document.querySelector('.extra[data-per-table="true"]');
+      document.getElementById('tableField').style.display = tableCheckbox.checked ? 'block' : 'none';
+      calc();
+    });
+  });
+
+  function calc(){
+    const pkgPill = document.querySelector('#pkgRow .pill.active');
+    const base = parseFloat(pkgPill.dataset.base);
+    const pkgName = pkgPill.dataset.name;
+
+    const bmFee = bridesmaids * 35;
+
+    let extrasTotal = 0;
+    let extrasHtml = '';
+    document.querySelectorAll('.extra:checked').forEach(c=>{
+      if(c.dataset.perTable === 'true'){
+        const tableCost = tables * parseFloat(c.dataset.price);
+        extrasTotal += tableCost;
+        extrasHtml += `<div class="t-line muted"><span>${c.dataset.label} × ${tables}</span><span>+£${tableCost.toFixed(0)}</span></div>`;
+      } else {
+        const price = parseFloat(c.dataset.price);
+        extrasTotal += price;
+        extrasHtml += `<div class="t-line muted"><span>${c.dataset.label}</span><span>+£${price}</span></div>`;
+      }
+    });
+
+    const total = base + bmFee + extrasTotal;
+
+    document.getElementById('rPkg').textContent = pkgName;
+    document.getElementById('rBase').textContent = `£${base.toFixed(0)}`;
+
+    const bmRow = document.getElementById('rBmRow');
+    if(bridesmaids > 0){
+      bmRow.style.display = 'flex';
+      document.getElementById('rBmLabel').textContent = `${bridesmaids} extra bridesmaid bouquet${bridesmaids>1?'s':''}`;
+      document.getElementById('rBmVal').textContent = `+£${bmFee.toFixed(0)}`;
+    } else {
+      bmRow.style.display = 'none';
+    }
+
+    document.getElementById('rExtras').innerHTML = extrasHtml;
+    document.getElementById('rTotal').textContent = `£${total.toFixed(0)}`;
+  }
+
+  calc();
+</script>
+</body>
+</html>
