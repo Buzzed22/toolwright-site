@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chloë's Beauty — Treatment Estimator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F4EEEF;
+    --card: #FFFFFF;
+    --ink: #362731;
+    --ink-soft: #77636E;
+    --mauve: #8A5C74;
+    --gold: #C99B4A;
+    --line: #E7DDE1;
+    --radius: 14px;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Inter', sans-serif; padding:40px 20px;
+  }
+  .wrap{ max-width:980px; margin:0 auto; }
+  .masthead{
+    display:flex; align-items:baseline; justify-content:space-between;
+    margin-bottom:26px; flex-wrap:wrap; gap:10px;
+  }
+  .brand{ font-family:'Playfair Display', serif; font-weight:700; font-size:28px; color:var(--mauve); }
+  .brand span{ color:var(--gold); }
+  .tag{ font-size:12px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.09em; }
+
+  .grid{ display:grid; grid-template-columns: 1.3fr 1fr; gap:26px; }
+  @media (max-width:780px){ .grid{ grid-template-columns:1fr; } }
+
+  .card{ background:var(--card); border-radius:var(--radius); border:1px solid var(--line); padding:28px; }
+  h2{ font-family:'Playfair Display', serif; font-weight:700; font-size:20px; margin:0 0 20px 0; color:var(--mauve); }
+  .field{ margin-bottom:22px; }
+  .field label{ display:flex; justify-content:space-between; font-size:14px; font-weight:500; margin-bottom:8px; }
+
+  .pillcol{ display:flex; flex-direction:column; gap:8px; }
+  .checks{ display:flex; flex-direction:column; gap:10px; }
+  .pill{
+    padding:10px 14px; border-radius:8px; border:1px solid var(--line);
+    background:var(--bg); font-size:13px; cursor:pointer; color:var(--ink-soft);
+  }
+  .pill.active{ background:var(--mauve); color:white; border-color:var(--mauve); }
+
+  .check{ display:flex; align-items:center; gap:10px; font-size:14px; cursor:pointer; }
+  .check input{ accent-color: var(--gold); width:16px; height:16px; }
+  .check .price{ margin-left:auto; font-family:'Space Mono', monospace; color:var(--ink-soft); font-size:13px; }
+
+  .ticket{ background:var(--mauve); color:white; border-radius:var(--radius); padding:26px; }
+  .ticket h2{ color:white; }
+  .t-line{
+    display:flex; justify-content:space-between; font-family:'Space Mono', monospace;
+    font-size:13px; padding:8px 0; border-bottom:1px dashed rgba(255,255,255,0.22);
+  }
+  .t-line.muted{ opacity:0.75; }
+  .t-total{ display:flex; justify-content:space-between; align-items:baseline; margin-top:16px; }
+  .t-total .amount{ font-family:'Space Mono', monospace; font-size:34px; font-weight:700; color:#F0D6A8; }
+  .cta{
+    display:block; width:100%; margin-top:18px; padding:14px; border:none; border-radius:8px;
+    background:var(--gold); color:white; font-family:'Inter', sans-serif; font-weight:700; font-size:14px; cursor:pointer;
+  }
+  .note{ text-align:center; font-size:11px; color:var(--ink-soft); margin-top:10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="masthead">
+    <div class="brand">Chloë's <span>Beauty</span></div>
+    <div class="tag">Treatment Estimator · Carlisle</div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Choose your treatment</h2>
+
+      <div class="field">
+        <label>Brow / SPMU treatment</label>
+        <div class="pillcol" id="pkgRow">
+          <div class="pill active" data-base="45" data-name="Brow wax &amp; tint">Brow wax &amp; tint</div>
+          <div class="pill" data-base="65" data-name="Henna brows">Henna brows</div>
+          <div class="pill" data-base="80" data-name="HD / hybrid brows">HD / hybrid brows</div>
+          <div class="pill" data-base="220" data-name="Microblading">Microblading</div>
+          <div class="pill" data-base="240" data-name="Combination brows">Combination brows</div>
+          <div class="pill" data-base="180" data-name="Lip blush">Lip blush</div>
+        </div>
+      </div>
+
+      <div class="field" style="margin-bottom:0;">
+        <label>Add-ons</label>
+        <div class="checks">
+          <label class="check"><input type="checkbox" class="extra" data-price="35" data-label="Lash lift &amp; tint"> Lash lift &amp; tint <span class="price">+£35</span></label>
+          <label class="check"><input type="checkbox" class="extra" data-price="45" data-label="4-8 week top-up (SPMU)"> 4-8 week top-up <span class="price">+£45</span></label>
+          <label class="check"><input type="checkbox" class="extra" data-price="15" data-label="Patch test"> Patch test <span class="price">+£15</span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="ticket">
+      <h2>Estimate</h2>
+      <div class="t-line"><span id="rPkg">Brow wax &amp; tint</span><span id="rBase">£—</span></div>
+      <div id="rExtras"></div>
+      <div class="t-total">
+        <span>Total</span>
+        <span class="amount" id="rTotal">£0</span>
+      </div>
+      <button class="cta">Book a free consultation</button>
+      <div class="note">Estimate only — confirmed at your consultation with Chloë</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('#pkgRow .pill').forEach(p=>{
+    p.addEventListener('click', ()=>{
+      document.querySelectorAll('#pkgRow .pill').forEach(x=>x.classList.remove('active'));
+      p.classList.add('active');
+      calc();
+    });
+  });
+
+  document.querySelectorAll('.extra').forEach(c=> c.addEventListener('change', calc));
+
+  function calc(){
+    const pkgPill = document.querySelector('#pkgRow .pill.active');
+    const base = parseFloat(pkgPill.dataset.base);
+    const pkgName = pkgPill.dataset.name;
+
+    let extrasTotal = 0;
+    let extrasHtml = '';
+    document.querySelectorAll('.extra:checked').forEach(c=>{
+      const price = parseFloat(c.dataset.price);
+      extrasTotal += price;
+      extrasHtml += `<div class="t-line muted"><span>${c.dataset.label}</span><span>+£${price}</span></div>`;
+    });
+
+    const total = base + extrasTotal;
+
+    document.getElementById('rPkg').textContent = pkgName;
+    document.getElementById('rBase').textContent = `£${base.toFixed(0)}`;
+    document.getElementById('rExtras').innerHTML = extrasHtml;
+    document.getElementById('rTotal').textContent = `£${total.toFixed(0)}`;
+  }
+
+  calc();
+</script>
+</body>
+</html>
