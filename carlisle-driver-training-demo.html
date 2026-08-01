@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Carlisle Driver Training — Lesson Package Estimator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #EEF0EE;
+    --card: #FFFFFF;
+    --ink: #20241F;
+    --ink-soft: #5A6259;
+    --moss: #3E5A3E;
+    --sun: #DDA43E;
+    --line: #DBDFD9;
+    --radius: 12px;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--bg); color:var(--ink); font-family:'Inter', sans-serif; padding:40px 20px; }
+  .wrap{ max-width:980px; margin:0 auto; }
+  .masthead{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:26px; flex-wrap:wrap; gap:10px; }
+  .brand{ font-family:'Sora', sans-serif; font-weight:700; font-size:24px; color:var(--moss); }
+  .brand span{ color:var(--sun); }
+  .tag{ font-size:12px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.09em; }
+  .grid{ display:grid; grid-template-columns: 1.3fr 1fr; gap:26px; }
+  @media (max-width:780px){ .grid{ grid-template-columns:1fr; } }
+  .card{ background:var(--card); border-radius:var(--radius); border:1px solid var(--line); padding:28px; }
+  h2{ font-family:'Sora', sans-serif; font-weight:700; font-size:19px; margin:0 0 20px 0; color:var(--moss); }
+  .field{ margin-bottom:22px; }
+  .field label{ display:flex; justify-content:space-between; font-size:14px; font-weight:500; margin-bottom:8px; }
+  .field label .val{ font-family:'Space Mono', monospace; color:var(--sun); font-weight:700; }
+  input[type=range]{ width:100%; accent-color: var(--moss); }
+  .pillrow{ display:flex; gap:8px; flex-wrap:wrap; }
+  .pill{ padding:9px 14px; border-radius:8px; border:1px solid var(--line); background:var(--bg); font-size:13px; cursor:pointer; color:var(--ink-soft); }
+  .pill.active{ background:var(--moss); color:white; border-color:var(--moss); }
+  .checks{ display:flex; flex-direction:column; gap:10px; }
+  .check{ display:flex; align-items:center; gap:10px; font-size:14px; cursor:pointer; }
+  .check input{ accent-color: var(--sun); width:16px; height:16px; }
+  .check .price{ margin-left:auto; font-family:'Space Mono', monospace; color:var(--ink-soft); font-size:13px; }
+  .ticket{ background:var(--moss); color:white; border-radius:var(--radius); padding:26px; }
+  .ticket h2{ color:white; }
+  .t-line{ display:flex; justify-content:space-between; font-family:'Space Mono', monospace; font-size:13px; padding:8px 0; border-bottom:1px dashed rgba(255,255,255,0.22); }
+  .t-line.muted{ opacity:0.75; }
+  .t-total{ display:flex; justify-content:space-between; align-items:baseline; margin-top:16px; }
+  .t-total .amount{ font-family:'Space Mono', monospace; font-size:34px; font-weight:700; color:#F2D593; }
+  .cta{ display:block; width:100%; margin-top:18px; padding:14px; border:none; border-radius:8px; background:var(--sun); color:white; font-family:'Inter', sans-serif; font-weight:700; font-size:14px; cursor:pointer; }
+  .note{ text-align:center; font-size:11px; color:var(--ink-soft); margin-top:10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="masthead">
+    <div class="brand">Carlisle <span>Driver</span> Training</div>
+    <div class="tag">Lesson Package Estimator</div>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h2>Build your lessons</h2>
+      <div class="field">
+        <label>Hours of tuition <span class="val" id="hoursVal">10 hrs</span></label>
+        <input type="range" id="hours" min="1" max="40" step="1" value="10">
+      </div>
+      <div class="field">
+        <label>Block type</label>
+        <div class="pillrow" id="blockRow">
+          <div class="pill active" data-disc="0">Pay as you go</div>
+          <div class="pill" data-disc="0.05">10-hour block</div>
+          <div class="pill" data-disc="0.10">20-hour block</div>
+        </div>
+      </div>
+      <div class="field" style="margin-bottom:0;">
+        <label>Add-ons</label>
+        <div class="checks">
+          <label class="check"><input type="checkbox" class="extra" data-price="40" data-label="Mock test"> Mock test <span class="price">+£40</span></label>
+          <label class="check"><input type="checkbox" class="extra" data-price="120" data-label="Pass Plus course"> Pass Plus course <span class="price">+£120</span></label>
+        </div>
+      </div>
+    </div>
+    <div class="ticket">
+      <h2>Estimate</h2>
+      <div class="t-line"><span id="rHours">10 hrs</span><span id="rBase">£—</span></div>
+      <div class="t-line muted" id="rDiscRow" style="display:none;"><span id="rDiscLabel"></span><span id="rDiscVal"></span></div>
+      <div id="rExtras"></div>
+      <div class="t-total"><span>Total</span><span class="amount" id="rTotal">£0</span></div>
+      <button class="cta">Book with Bill</button>
+      <div class="note">Estimate only — confirmed when you book your first lesson</div>
+    </div>
+  </div>
+</div>
+<script>
+  document.getElementById('hours').addEventListener('input', calc);
+  document.querySelectorAll('#blockRow .pill').forEach(p=>{
+    p.addEventListener('click', ()=>{
+      document.querySelectorAll('#blockRow .pill').forEach(x=>x.classList.remove('active'));
+      p.classList.add('active');
+      calc();
+    });
+  });
+  document.querySelectorAll('.extra').forEach(c=> c.addEventListener('change', calc));
+  function calc(){
+    const hours = parseInt(document.getElementById('hours').value);
+    document.getElementById('hoursVal').textContent = hours + ' hrs';
+    const blockPill = document.querySelector('#blockRow .pill.active');
+    const disc = parseFloat(blockPill.dataset.disc);
+    const blockName = blockPill.textContent;
+    const rate = 32;
+    const base = hours * rate;
+    const discAmt = base * disc;
+    let extrasTotal = 0;
+    let extrasHtml = '';
+    document.querySelectorAll('.extra:checked').forEach(c=>{
+      const price = parseFloat(c.dataset.price);
+      extrasTotal += price;
+      extrasHtml += `<div class="t-line muted"><span>${c.dataset.label}</span><span>+£${price}</span></div>`;
+    });
+    const total = base - discAmt + extrasTotal;
+    document.getElementById('rHours').textContent = `${hours} hrs · ${blockName}`;
+    document.getElementById('rBase').textContent = `£${base.toFixed(0)}`;
+    const discRow = document.getElementById('rDiscRow');
+    if(disc > 0){
+      discRow.style.display = 'flex';
+      document.getElementById('rDiscLabel').textContent = `Block discount (${(disc*100).toFixed(0)}%)`;
+      document.getElementById('rDiscVal').textContent = `−£${discAmt.toFixed(0)}`;
+    } else {
+      discRow.style.display = 'none';
+    }
+    document.getElementById('rExtras').innerHTML = extrasHtml;
+    document.getElementById('rTotal').textContent = `£${total.toFixed(0)}`;
+  }
+  calc();
+</script>
+</body>
+</html>
