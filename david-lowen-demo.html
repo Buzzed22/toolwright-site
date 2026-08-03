@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>David Lowen Cleaning Services — Instant Quote</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #EAF2F5;
+    --card: #FFFFFF;
+    --ink: #1C2E33;
+    --ink-soft: #547079;
+    --sky: #2C7FA0;
+    --sun: #E4A93B;
+    --line: #D8E5E9;
+    --radius: 14px;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--bg); color:var(--ink); font-family:'Inter', sans-serif; padding:40px 20px; }
+  .wrap{ max-width:980px; margin:0 auto; }
+  .masthead{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:26px; flex-wrap:wrap; gap:10px; }
+  .brand{ font-family:'Nunito', sans-serif; font-weight:800; font-size:24px; color:var(--sky); }
+  .brand span{ color:var(--sun); }
+  .tag{ font-size:12px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.09em; }
+  .grid{ display:grid; grid-template-columns: 1.3fr 1fr; gap:26px; }
+  @media (max-width:780px){ .grid{ grid-template-columns:1fr; } }
+  .card{ background:var(--card); border-radius:var(--radius); border:1px solid var(--line); padding:28px; }
+  h2{ font-family:'Nunito', sans-serif; font-weight:800; font-size:19px; margin:0 0 20px 0; color:var(--sky); }
+  .field{ margin-bottom:22px; }
+  .field label{ display:flex; justify-content:space-between; font-size:14px; font-weight:500; margin-bottom:8px; }
+  .pillrow{ display:flex; gap:8px; flex-wrap:wrap; }
+  .pill{ padding:9px 14px; border-radius:999px; border:1px solid var(--line); background:var(--bg); font-size:13px; cursor:pointer; color:var(--ink-soft); }
+  .pill.active{ background:var(--sky); color:white; border-color:var(--sky); }
+  .checks{ display:flex; flex-direction:column; gap:10px; }
+  .check{ display:flex; align-items:center; gap:10px; font-size:14px; cursor:pointer; }
+  .check input{ accent-color: var(--sun); width:16px; height:16px; }
+  .check .price{ margin-left:auto; font-family:'Space Mono', monospace; color:var(--ink-soft); font-size:13px; }
+  .ticket{ background:var(--sky); color:white; border-radius:var(--radius); padding:26px; }
+  .ticket h2{ color:white; }
+  .t-line{ display:flex; justify-content:space-between; font-family:'Space Mono', monospace; font-size:13px; padding:8px 0; border-bottom:1px dashed rgba(255,255,255,0.22); }
+  .t-line.muted{ opacity:0.75; }
+  .t-total{ display:flex; justify-content:space-between; align-items:baseline; margin-top:16px; }
+  .t-total .amount{ font-family:'Space Mono', monospace; font-size:34px; font-weight:700; color:#F5D493; }
+  .cta{ display:block; width:100%; margin-top:18px; padding:14px; border:none; border-radius:10px; background:var(--sun); color:white; font-family:'Inter', sans-serif; font-weight:700; font-size:14px; cursor:pointer; }
+  .note{ text-align:center; font-size:11px; color:var(--ink-soft); margin-top:10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="masthead">
+    <div class="brand">David Lowen <span>Cleaning</span></div>
+    <div class="tag">Instant Quote · Carlisle</div>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h2>Your property</h2>
+      <div class="field">
+        <label>Property size</label>
+        <div class="pillrow" id="sizeRow">
+          <div class="pill active" data-rate="12">Terraced / small</div>
+          <div class="pill" data-rate="18">Semi-detached</div>
+          <div class="pill" data-rate="26">Detached / large</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Frequency</label>
+        <div class="pillrow" id="freqRow">
+          <div class="pill active" data-disc="0">One-off</div>
+          <div class="pill" data-disc="0.05">Monthly</div>
+          <div class="pill" data-disc="0.10">Every 4 weeks</div>
+          <div class="pill" data-disc="0.15">Fortnightly</div>
+        </div>
+      </div>
+      <div class="field" style="margin-bottom:0;">
+        <label>Add-ons</label>
+        <div class="checks">
+          <label class="check"><input type="checkbox" class="extra" data-price="10" data-label="Conservatory roof"> Conservatory roof <span class="price">+£10</span></label>
+          <label class="check"><input type="checkbox" class="extra" data-price="8" data-label="Fascias &amp; soffits"> Fascias &amp; soffits <span class="price">+£8</span></label>
+          <label class="check"><input type="checkbox" class="extra" data-price="6" data-label="Front door &amp; frame"> Front door &amp; frame <span class="price">+£6</span></label>
+        </div>
+      </div>
+    </div>
+    <div class="ticket">
+      <h2>Estimate</h2>
+      <div class="t-line"><span id="rSize">Terraced / small</span><span id="rBase">£—</span></div>
+      <div class="t-line muted" id="rDiscRow" style="display:none;"><span id="rDiscLabel"></span><span id="rDiscVal"></span></div>
+      <div id="rExtras"></div>
+      <div class="t-total"><span id="rFreqLabel">One-off visit</span><span class="amount" id="rTotal">£0</span></div>
+      <button class="cta">Book with Vince</button>
+      <div class="note">Estimate only — Vince confirms on first visit</div>
+    </div>
+  </div>
+</div>
+<script>
+  document.querySelectorAll('#sizeRow .pill').forEach(p=>{
+    p.addEventListener('click', ()=>{
+      document.querySelectorAll('#sizeRow .pill').forEach(x=>x.classList.remove('active'));
+      p.classList.add('active');
+      calc();
+    });
+  });
+  document.querySelectorAll('#freqRow .pill').forEach(p=>{
+    p.addEventListener('click', ()=>{
+      document.querySelectorAll('#freqRow .pill').forEach(x=>x.classList.remove('active'));
+      p.classList.add('active');
+      calc();
+    });
+  });
+  document.querySelectorAll('.extra').forEach(c=> c.addEventListener('change', calc));
+  function calc(){
+    const sizePill = document.querySelector('#sizeRow .pill.active');
+    const rate = parseFloat(sizePill.dataset.rate);
+    const sizeName = sizePill.textContent;
+    const freqPill = document.querySelector('#freqRow .pill.active');
+    const disc = parseFloat(freqPill.dataset.disc);
+    const freqName = freqPill.textContent;
+    let extrasTotal = 0;
+    let extrasHtml = '';
+    document.querySelectorAll('.extra:checked').forEach(c=>{
+      const price = parseFloat(c.dataset.price);
+      extrasTotal += price;
+      extrasHtml += `<div class="t-line muted"><span>${c.dataset.label}</span><span>+£${price}</span></div>`;
+    });
+    const subtotal = rate + extrasTotal;
+    const discAmt = subtotal * disc;
+    const total = subtotal - discAmt;
+    document.getElementById('rSize').textContent = sizeName;
+    document.getElementById('rBase').textContent = `£${rate.toFixed(0)}`;
+    const discRow = document.getElementById('rDiscRow');
+    if(disc > 0){
+      discRow.style.display = 'flex';
+      document.getElementById('rDiscLabel').textContent = `${freqName} discount (${(disc*100).toFixed(0)}%)`;
+      document.getElementById('rDiscVal').textContent = `−£${discAmt.toFixed(0)}`;
+    } else {
+      discRow.style.display = 'none';
+    }
+    document.getElementById('rExtras').innerHTML = extrasHtml;
+    document.getElementById('rFreqLabel').textContent = freqName === 'One-off' ? 'One-off visit' : `Per visit, ${freqName.toLowerCase()}`;
+    document.getElementById('rTotal').textContent = `£${total.toFixed(0)}`;
+  }
+  calc();
+</script>
+</body>
+</html>
