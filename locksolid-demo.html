@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Locksolid Locksmiths — Instant Quote</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #EBEDEF;
+    --card: #FFFFFF;
+    --ink: #1F242B;
+    --ink-soft: #5A6472;
+    --navy: #232F45;
+    --teal: #2E9C8F;
+    --line: #DADDE2;
+    --radius: 12px;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--bg); color:var(--ink); font-family:'Inter', sans-serif; padding:40px 20px; }
+  .wrap{ max-width:980px; margin:0 auto; }
+  .masthead{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:26px; flex-wrap:wrap; gap:10px; }
+  .brand{ font-family:'Rajdhani', sans-serif; font-weight:700; font-size:28px; text-transform:uppercase; letter-spacing:0.02em; color:var(--navy); }
+  .brand span{ color:var(--teal); }
+  .tag{ font-size:12px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.09em; }
+  .grid{ display:grid; grid-template-columns: 1.3fr 1fr; gap:26px; }
+  @media (max-width:780px){ .grid{ grid-template-columns:1fr; } }
+  .card{ background:var(--card); border-radius:var(--radius); border:1px solid var(--line); padding:28px; }
+  h2{ font-family:'Rajdhani', sans-serif; text-transform:uppercase; letter-spacing:0.02em; font-weight:700; font-size:19px; margin:0 0 20px 0; color:var(--navy); }
+  .field{ margin-bottom:22px; }
+  .field label{ display:flex; justify-content:space-between; font-size:14px; font-weight:500; margin-bottom:8px; }
+  .pillcol{ display:flex; flex-direction:column; gap:8px; }
+  .pillrow{ display:flex; gap:8px; flex-wrap:wrap; }
+  .pill{ padding:10px 14px; border-radius:8px; border:1px solid var(--line); background:var(--bg); font-size:13px; cursor:pointer; color:var(--ink-soft); }
+  .pill.active{ background:var(--navy); color:white; border-color:var(--navy); }
+  .ticket{ background:var(--navy); color:white; border-radius:var(--radius); padding:26px; }
+  .ticket h2{ color:white; }
+  .t-line{ display:flex; justify-content:space-between; font-family:'Space Mono', monospace; font-size:13px; padding:8px 0; border-bottom:1px dashed rgba(255,255,255,0.2); }
+  .t-line.muted{ opacity:0.7; }
+  .t-total{ display:flex; justify-content:space-between; align-items:baseline; margin-top:16px; }
+  .t-total .amount{ font-family:'Space Mono', monospace; font-size:34px; font-weight:700; color:#8FE0D2; }
+  .cta{ display:block; width:100%; margin-top:18px; padding:14px; border:none; border-radius:8px; background:var(--teal); color:white; font-family:'Inter', sans-serif; font-weight:700; font-size:14px; cursor:pointer; }
+  .note{ text-align:center; font-size:11px; color:var(--ink-soft); margin-top:10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="masthead">
+    <div class="brand">Locksolid <span>Locksmiths</span></div>
+    <div class="tag">Instant Quote · Carlisle</div>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h2>Your job</h2>
+      <div class="field">
+        <label>Job type</label>
+        <div class="pillcol" id="jobRow">
+          <div class="pill active" data-base="65" data-name="Emergency lockout">Emergency lockout</div>
+          <div class="pill" data-base="45" data-name="Lock change / upgrade">Lock change / upgrade</div>
+          <div class="pill" data-base="85" data-name="uPVC door repair">uPVC door repair</div>
+          <div class="pill" data-base="30" data-name="Key cutting / programming">Key cutting / programming</div>
+        </div>
+      </div>
+      <div class="field" style="margin-bottom:0;">
+        <label>Urgency</label>
+        <div class="pillrow" id="urgRow">
+          <div class="pill active" data-mult="1">Standard</div>
+          <div class="pill" data-mult="1.4">Emergency / out of hours</div>
+        </div>
+      </div>
+    </div>
+    <div class="ticket">
+      <h2>Estimate</h2>
+      <div class="t-line"><span id="rJob">Emergency lockout</span><span id="rBase">£—</span></div>
+      <div class="t-line muted" id="rUrgRow" style="display:none;"><span>Out of hours callout</span><span id="rUrgVal">£0</span></div>
+      <div class="t-total"><span>Total</span><span class="amount" id="rTotal">£0</span></div>
+      <button class="cta">Call Steve now</button>
+      <div class="note">Estimate only — confirmed on arrival</div>
+    </div>
+  </div>
+</div>
+<script>
+  document.querySelectorAll('#jobRow .pill').forEach(p=>{
+    p.addEventListener('click', ()=>{
+      document.querySelectorAll('#jobRow .pill').forEach(x=>x.classList.remove('active'));
+      p.classList.add('active');
+      calc();
+    });
+  });
+  document.querySelectorAll('#urgRow .pill').forEach(p=>{
+    p.addEventListener('click', ()=>{
+      document.querySelectorAll('#urgRow .pill').forEach(x=>x.classList.remove('active'));
+      p.classList.add('active');
+      calc();
+    });
+  });
+  function calc(){
+    const jobPill = document.querySelector('#jobRow .pill.active');
+    const base = parseFloat(jobPill.dataset.base);
+    const jobName = jobPill.dataset.name;
+    const urgPill = document.querySelector('#urgRow .pill.active');
+    const urgMult = parseFloat(urgPill.dataset.mult);
+    const urgFee = base * (urgMult - 1);
+    const total = base + urgFee;
+    document.getElementById('rJob').textContent = jobName;
+    document.getElementById('rBase').textContent = `£${base.toFixed(0)}`;
+    const urgRow = document.getElementById('rUrgRow');
+    if(urgFee > 0){
+      urgRow.style.display = 'flex';
+      document.getElementById('rUrgVal').textContent = `+£${urgFee.toFixed(0)}`;
+    } else {
+      urgRow.style.display = 'none';
+    }
+    document.getElementById('rTotal').textContent = `£${total.toFixed(0)}`;
+  }
+  calc();
+</script>
+</body>
+</html>
