@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Heavens Deli Catering — Instant Quote</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #FBF1E9;
+    --card: #FFFFFF;
+    --ink: #3A2E22;
+    --ink-soft: #7A6A57;
+    --terracotta: #C1613A;
+    --olive: #6D7A45;
+    --line: #EFDECC;
+    --radius: 16px;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--bg); color:var(--ink); font-family:'Inter', sans-serif; padding:40px 20px; }
+  .wrap{ max-width:980px; margin:0 auto; }
+  .masthead{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:26px; flex-wrap:wrap; gap:10px; }
+  .brand{ font-family:'Fredoka', sans-serif; font-weight:700; font-size:26px; color:var(--olive); }
+  .brand span{ color:var(--terracotta); }
+  .tag{ font-size:12px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.09em; }
+  .grid{ display:grid; grid-template-columns: 1.3fr 1fr; gap:26px; }
+  @media (max-width:780px){ .grid{ grid-template-columns:1fr; } }
+  .card{ background:var(--card); border-radius:var(--radius); border:1px solid var(--line); padding:28px; }
+  h2{ font-family:'Fredoka', sans-serif; font-weight:700; font-size:19px; margin:0 0 20px 0; color:var(--olive); }
+  .field{ margin-bottom:22px; }
+  .field label{ display:flex; justify-content:space-between; font-size:14px; font-weight:500; margin-bottom:8px; }
+  .field label .val{ font-family:'Space Mono', monospace; color:var(--terracotta); font-weight:700; }
+  input[type=range]{ width:100%; accent-color: var(--olive); }
+  .pillcol{ display:flex; flex-direction:column; gap:8px; }
+  .pill{ padding:10px 14px; border-radius:8px; border:1px solid var(--line); background:var(--bg); font-size:13px; cursor:pointer; color:var(--ink-soft); }
+  .pill.active{ background:var(--olive); color:white; border-color:var(--olive); }
+  .checks{ display:flex; flex-direction:column; gap:10px; }
+  .check{ display:flex; align-items:center; gap:10px; font-size:14px; cursor:pointer; }
+  .check input{ accent-color: var(--terracotta); width:16px; height:16px; }
+  .check .price{ margin-left:auto; font-family:'Space Mono', monospace; color:var(--ink-soft); font-size:13px; }
+  .ticket{ background:var(--olive); color:white; border-radius:var(--radius); padding:26px; }
+  .ticket h2{ color:white; }
+  .t-line{ display:flex; justify-content:space-between; font-family:'Space Mono', monospace; font-size:13px; padding:8px 0; border-bottom:1px dashed rgba(255,255,255,0.22); }
+  .t-line.muted{ opacity:0.75; }
+  .t-total{ display:flex; justify-content:space-between; align-items:baseline; margin-top:16px; }
+  .t-total .amount{ font-family:'Space Mono', monospace; font-size:34px; font-weight:700; color:#F0C4A4; }
+  .cta{ display:block; width:100%; margin-top:18px; padding:14px; border:none; border-radius:10px; background:var(--terracotta); color:white; font-family:'Inter', sans-serif; font-weight:700; font-size:14px; cursor:pointer; }
+  .note{ text-align:center; font-size:11px; color:var(--ink-soft); margin-top:10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="masthead">
+    <div class="brand">Heavens <span>Deli</span></div>
+    <div class="tag">Instant Quote · Carlisle</div>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h2>Your event</h2>
+      <div class="field">
+        <label>Guests <span class="val" id="guestsVal">20</span></label>
+        <input type="range" id="guests" min="5" max="100" step="5" value="20">
+      </div>
+      <div class="field">
+        <label>Menu style</label>
+        <div class="pillcol" id="menuRow">
+          <div class="pill active" data-rate="8" data-name="Polish home-style buffet">Polish home-style buffet</div>
+          <div class="pill" data-rate="10" data-name="Party platters">Party platters</div>
+          <div class="pill" data-rate="14" data-name="Full family reunion spread">Full family reunion spread</div>
+        </div>
+      </div>
+      <div class="field" style="margin-bottom:0;">
+        <label>Add-ons</label>
+        <div class="checks">
+          <label class="check"><input type="checkbox" class="extra" data-price="35" data-label="Celebration cake"> Celebration cake <span class="price">+£35</span></label>
+          <label class="check"><input type="checkbox" class="extra" data-price="20" data-label="Delivery &amp; setup"> Delivery &amp; setup <span class="price">+£20</span></label>
+        </div>
+      </div>
+    </div>
+    <div class="ticket">
+      <h2>Estimate</h2>
+      <div class="t-line"><span id="rMenu">Polish home-style buffet · 20 guests</span><span id="rBase">£—</span></div>
+      <div id="rExtras"></div>
+      <div class="t-total"><span>Total</span><span class="amount" id="rTotal">£0</span></div>
+      <button class="cta">Enquire about catering</button>
+      <div class="note">Estimate only — confirmed when you order</div>
+    </div>
+  </div>
+</div>
+<script>
+  document.getElementById('guests').addEventListener('input', calc);
+  document.querySelectorAll('#menuRow .pill').forEach(p=>{
+    p.addEventListener('click', ()=>{
+      document.querySelectorAll('#menuRow .pill').forEach(x=>x.classList.remove('active'));
+      p.classList.add('active');
+      calc();
+    });
+  });
+  document.querySelectorAll('.extra').forEach(c=> c.addEventListener('change', calc));
+  function calc(){
+    const guests = parseInt(document.getElementById('guests').value);
+    document.getElementById('guestsVal').textContent = guests;
+    const menuPill = document.querySelector('#menuRow .pill.active');
+    const rate = parseFloat(menuPill.dataset.rate);
+    const menuName = menuPill.dataset.name;
+    const base = guests * rate;
+    let extrasTotal = 0;
+    let extrasHtml = '';
+    document.querySelectorAll('.extra:checked').forEach(c=>{
+      const price = parseFloat(c.dataset.price);
+      extrasTotal += price;
+      extrasHtml += `<div class="t-line muted"><span>${c.dataset.label}</span><span>+£${price}</span></div>`;
+    });
+    const total = base + extrasTotal;
+    document.getElementById('rMenu').textContent = `${menuName} · ${guests} guests`;
+    document.getElementById('rBase').textContent = `£${base.toFixed(0)}`;
+    document.getElementById('rExtras').innerHTML = extrasHtml;
+    document.getElementById('rTotal').textContent = `£${total.toFixed(0)}`;
+  }
+  calc();
+</script>
+</body>
+</html>
